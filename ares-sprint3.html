@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARES — Kit e Liga de Combate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --red:#cc0000;
+  --red-dim:#7a0000;
+  --red-deep:#2a0000;
+  --bg:#0a0a0a;
+  --panel:#0d0000;
+  --line:#1c1c1c;
+  --text:#e0e0e0;
+  --muted:#888;
+  --steel:#7f9bb0;      /* registro frio: seção de investidores */
+  --steel-dim:#3d4c57;
+  --ok:#4caf50;
+  --pad-x:13%;
+}
+
+html{font-size:120%;scroll-behavior:smooth;scroll-padding-top:56px}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Barlow',sans-serif;font-weight:300;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:200;
+  background:rgba(10,10,10,.96);border-bottom:2px solid var(--red);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--pad-x);height:54px;
+}
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.35rem;
+  color:var(--red);letter-spacing:.05em;text-decoration:none;flex:0 0 auto;
+}
+.nav-links{display:flex;gap:1.35rem;list-style:none;flex-wrap:nowrap}
+.nav-links a{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.74rem;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--text);
+  text-decoration:none;transition:color .18s;white-space:nowrap;
+}
+.nav-links a:hover,.nav-links a.on{color:var(--red)}
+.nav-toggle{
+  display:none;background:none;border:1px solid var(--red-deep);color:var(--red);
+  font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.1em;
+  padding:.4rem .7rem;cursor:pointer;
+}
+
+/* ---------- BLOCOS ---------- */
+.sec{padding:88px var(--pad-x);border-top:1px solid var(--line)}
+.eyebrow{
+  font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--red);
+  letter-spacing:.18em;text-transform:uppercase;display:block;margin-bottom:.55rem;
+}
+.sec-title{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.1rem;
+  color:var(--red);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:.9rem;line-height:1.05;
+}
+.lede{max-width:620px;font-size:.95rem;color:var(--text);margin-bottom:2.2rem}
+.body-t{font-size:.87rem}
+.muted-t{font-size:.8rem;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:2.4rem 0}
+
+/* ---------- HERO ---------- */
+#inicio{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:80px var(--pad-x);position:relative;overflow:hidden;border-top:none;
+}
+#inicio::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 52%,rgba(120,0,0,.20) 0%,transparent 70%);
+}
+.hero-title{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(5rem,17vw,13rem);color:var(--red);
+  letter-spacing:-.02em;line-height:.92;text-align:center;position:relative;
+}
+.hero-sub{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.95rem;
+  letter-spacing:.36em;text-transform:uppercase;color:var(--text);
+  margin-top:.6rem;text-align:center;position:relative;
+}
+.hero-line{
+  position:relative;max-width:560px;text-align:center;margin-top:1.8rem;
+  font-size:1rem;color:var(--text);
+}
+.hero-cta{position:relative;display:flex;gap:.8rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+
+/* ---------- BOTÕES ---------- */
+.btn{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.85rem;
+  letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.5rem;
+  border:2px solid var(--red);background:var(--red);color:#fff;
+  cursor:pointer;text-decoration:none;display:inline-block;transition:background .18s,color .18s;
+}
+.btn:hover{background:transparent;color:var(--red)}
+.btn.ghost{background:transparent;color:var(--red)}
+.btn.ghost:hover{background:var(--red);color:#fff}
+.btn.steel{border-color:var(--steel);background:var(--steel);color:#08131a}
+.btn.steel:hover{background:transparent;color:var(--steel)}
+.btn:disabled{border-color:#333;background:#161616;color:var(--muted);cursor:default}
+
+/* ---------- CARDS / GRIDS ---------- */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.card{border:1px solid var(--red-deep);background:var(--panel);padding:1.15rem}
+.card h3{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.15rem;
+  color:var(--red);letter-spacing:.03em;margin-bottom:.35rem;
+}
+.card p{font-size:.82rem;color:var(--text)}
+.card .tag{
+  font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;display:block;margin-top:.7rem;
+}
+
+/* ---------- SPECS ---------- */
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;max-width:720px}
+.spec-label{
+  font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--red);
+  letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:.1rem;
+}
+.spec-value{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.15rem;color:var(--text)}
+
+/* ---------- FOTOS ---------- */
+.shots{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-bottom:1.6rem}
+.shot{border:1px solid var(--red-dim);background:#0d0000;overflow:hidden;position:relative}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;aspect-ratio:16/10}
+.shot .cap{
+  font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);
+  letter-spacing:.08em;padding:.45rem .6rem;border-top:1px solid var(--red-deep);
+}
+.shot.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  aspect-ratio:16/10;background:repeating-linear-gradient(45deg,#0d0000,#0d0000 10px,#110000 10px,#110000 20px)}
+.shot.ph span{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--red-dim);letter-spacing:.12em;text-align:center;padding:0 1rem}
+.shot-col{display:grid;gap:1rem}
+
+/* ---------- TABELAS ---------- */
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{
+  font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--red);
+  letter-spacing:.1em;text-transform:uppercase;text-align:left;
+  padding:.6rem .7rem;border-bottom:1px solid var(--red-dim);vertical-align:bottom;
+}
+td{padding:.6rem .7rem;border-bottom:1px solid var(--line);color:var(--text);vertical-align:top}
+tr:last-child td{border-bottom:none}
+
+/* ---------- GRÁFICOS ---------- */
+.chart{margin:1.1rem 0 1.8rem}
+.chart-t{font-family:'Share Tech Mono',monospace;font-size:.66rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem}
+.bar-row{display:grid;grid-template-columns:180px 1fr 44px;gap:.7rem;align-items:center;margin-bottom:.4rem}
+.bar-lab{font-size:.76rem;color:var(--text);text-align:right}
+.bar-track{background:#140000;height:16px;border:1px solid var(--red-deep)}
+.bar-fill{background:var(--red);height:100%}
+.bar-fill.steel{background:var(--steel)}
+.bar-num{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--muted)}
+
+/* ---------- FORMULÁRIOS ---------- */
+.field{
+  background:#111;border:1px solid var(--red-deep);color:var(--text);
+  padding:.6rem .8rem;font-size:.82rem;font-family:'Barlow',sans-serif;
+  outline:none;width:100%;
+}
+.field:focus{border-color:var(--red)}
+.field::placeholder{color:#555}
+select.field{color:var(--muted)}
+.form-col{display:flex;flex-direction:column;gap:.6rem}
+.consent{display:flex;align-items:flex-start;gap:.6rem;font-size:.75rem;color:var(--muted);cursor:pointer;line-height:1.5}
+.consent input{accent-color:var(--red);margin-top:3px;flex:0 0 auto}
+.note{
+  font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--muted);
+  letter-spacing:.06em;line-height:1.7;
+}
+
+/* ---------- CHAT ---------- */
+.chat{border:1px solid var(--red-deep);background:var(--panel);display:flex;flex-direction:column;height:380px}
+.chat-head{
+  border-bottom:1px solid var(--red-deep);padding:.6rem .9rem;
+  font-family:'Share Tech Mono',monospace;font-size:.66rem;color:var(--red);letter-spacing:.12em;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.chat-status{color:var(--ok);font-size:.6rem}
+.chat-log{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:.7rem}
+.msg{max-width:82%;font-size:.8rem;padding:.55rem .75rem;line-height:1.5}
+.msg.bot{background:#150000;border-left:2px solid var(--red);align-self:flex-start}
+.msg.me{background:#1a1a1a;border-right:2px solid var(--muted);align-self:flex-end;text-align:right}
+.chat-opts{border-top:1px solid var(--red-deep);padding:.7rem .9rem;display:flex;gap:.45rem;flex-wrap:wrap}
+.chip{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;padding:.35rem .7rem;
+  border:1px solid var(--red-dim);background:transparent;color:var(--text);cursor:pointer;transition:.18s;
+}
+.chip:hover{border-color:var(--red);color:var(--red)}
+
+/* ---------- SEÇÃO INVESTIDOR (registro frio) ---------- */
+#socio{background:#080a0c}
+#socio .sec-title{color:var(--steel)}
+#socio .eyebrow{color:var(--steel)}
+.tier{border:1px solid var(--steel-dim);background:#0b0e11;margin-bottom:1.1rem}
+.tier-head{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:.85rem 1.1rem;border-bottom:1px solid var(--steel-dim);flex-wrap:wrap;
+}
+.tier-id{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.15rem;color:var(--steel);letter-spacing:.06em}
+.tier-id small{display:block;font-family:'Barlow',sans-serif;font-weight:300;font-size:.74rem;color:var(--muted);letter-spacing:0;text-transform:none}
+.tier-state{
+  font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:.14em;
+  padding:.3rem .65rem;border:1px solid currentColor;white-space:nowrap;
+}
+.st-open{color:var(--ok)}
+.st-lock{color:var(--red)}
+.tier-body{padding:1.1rem}
+.tier-body.locked{display:none}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-bottom:1.4rem}
+.kpi-v{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.6rem;color:var(--steel);line-height:1.1}
+.kpi-l{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+#socio th{color:var(--steel);border-bottom-color:var(--steel-dim)}
+#socio .field{border-color:var(--steel-dim)}
+#socio .field:focus{border-color:var(--steel)}
+#socio .consent input{accent-color:var(--steel)}
+.gate{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;align-items:start}
+.gate-msg{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.06em;margin-top:.7rem;min-height:1.1rem}
+.gate-msg.err{color:var(--red)}
+.gate-msg.ok{color:var(--ok)}
+
+/* ---------- FOOTER ---------- */
+footer{
+  border-top:1px solid var(--line);padding:1.6rem var(--pad-x);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.footer-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.05rem;color:var(--red-dim)}
+.footer-copy{font-family:'Share Tech Mono',monospace;font-size:.63rem;color:var(--muted)}
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width:1180px){
+  :root{--pad-x:8%}
+  .nav-links{gap:1rem}
+  .nav-links a{font-size:.7rem;letter-spacing:.07em}
+}
+@media (max-width:900px){
+  :root{--pad-x:6%}
+  nav{padding:0 6%}
+  .nav-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;top:54px;left:0;width:100%;
+    flex-direction:column;gap:0;background:rgba(10,10,10,.99);
+    border-bottom:2px solid var(--red);padding:.5rem 6% 1rem;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{display:block;padding:.65rem 0;font-size:.85rem;border-bottom:1px solid var(--line)}
+  .sec{padding:64px var(--pad-x)}
+  .grid-2,.grid-3,.grid-4,.specs,.shots,.gate{grid-template-columns:1fr}
+  .kpi{grid-template-columns:1fr 1fr}
+  .bar-row{grid-template-columns:110px 1fr 38px;gap:.5rem}
+  .bar-lab{font-size:.7rem}
+  .sec-title{font-size:1.7rem}
+  table{font-size:.75rem}
+  th,td{padding:.5rem .45rem}
+}
+@media (max-width:560px){
+  .kpi{grid-template-columns:1fr}
+  .hero-cta{width:100%;flex-direction:column}
+  .hero-cta .btn{text-align:center}
+  .bar-row{grid-template-columns:1fr;gap:.15rem;margin-bottom:.75rem}
+  .bar-lab{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <a class="nav-logo" href="#inicio">ARES</a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">MENU</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#quem-somos">Quem somos</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#robo">O robô</a></li>
+    <li><a href="#desenvolvimento">Desenvolvimento</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li><a href="#pais">Para pais</a></li>
+    <li><a href="#comprar">Comprar</a></li>
+    <li><a href="#socio">Seja meu sócio</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="inicio">
+  <h1 class="hero-title">ARES</h1>
+  <p class="hero-sub">Robô de combate</p>
+  <p class="hero-line">Um kit antweight de 150 gramas que você monta, programa e coloca na arena. E uma liga mensal onde ele apanha, é consertado e volta melhor.</p>
+  <div class="hero-cta">
+    <a class="btn" href="#comprar">Ver o kit e a liga</a>
+    <a class="btn ghost" href="#socio">Área do investidor</a>
+  </div>
+</section>
+
+<!-- ============ QUEM SOMOS ============ -->
+<section id="quem-somos" class="sec">
+  <span class="eyebrow">// Quem somos</span>
+  <h2 class="sec-title">Quatro alunos e um robô que não parou na competição</h2>
+  <p class="lede">O ARES começou como projeto da RoboCup FIAP, em 2026. Era pra ser um robô de arena e acabar ali. No meio da montagem percebemos uma coisa: a parte que mais tomava tempo do grupo não era a mecânica, era o código de controle. E era também a parte que mais ensinava. Foi de onde saiu a empresa.</p>
+
+  <p class="body-t" style="max-width:620px;margin-bottom:2rem;">Somos alunos do primeiro ano de Sistemas de Informação. Não temos fábrica, não temos investidor e o robô ainda cabe numa caixa de sapato. O que temos é um protótipo que funciona, uma pesquisa com 28 respondentes e um modelo de negócio que a gente consegue defender número por número.</p>
+
+  <span class="eyebrow">// Integrantes</span>
+  <div class="grid-4" style="margin-top:.9rem;">
+    <div class="card">
+      <h3>Derek Silva Frug</h3>
+      <p>Idealizador do ARES. Projeto mecânico do chassi e do sistema de armamento, e a lógica de controle embarcada.</p>
+      <span class="tag">RM 569503 · Estrutura e programação</span>
+    </div>
+    <div class="card">
+      <h3>Jessica Rodrigues</h3>
+      <p>Design do robô e da marca. Cálculos de resistência e distribuição de massa que mantêm o ARES dentro dos 150 g da categoria.</p>
+      <span class="tag">RM 573089 · Design e cálculos</span>
+    </div>
+    <div class="card">
+      <h3>Augusto Spanholi</h3>
+      <p>Presença digital da empresa. Desenvolveu este site e cuida do posicionamento da marca e dos canais de comunicação.</p>
+      <span class="tag">RM 572013 · Web e divulgação</span>
+    </div>
+    <div class="card">
+      <h3>Daniel Gratão Silva</h3>
+      <p>Software de controle, com foco em resposta em tempo real durante o combate. Apoia a comunicação da equipe.</p>
+      <span class="tag">RM 571563 · Programação e divulgação</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIFERENCIAIS ============ -->
+<section id="diferenciais" class="sec">
+  <span class="eyebrow">// Nossos diferenciais</span>
+  <h2 class="sec-title">O robô é o pretexto. A aula é o código.</h2>
+  <p class="lede">Quando perguntamos a 28 pessoas quais áreas de tecnologia mais chamavam a atenção delas, robótica ficou em quinto lugar. Inteligência artificial ficou em primeiro, com 22 das 28 respostas. Programação ficou em segundo, com 14. Isso mudou o produto.</p>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Hardware barato, software sério</h3>
+      <p>Antweight é a categoria de entrada do combate: 150 gramas, alumínio 6061, nada que exija oficina. O custo fica no acessível de propósito. O que a gente leva a sério é o que roda dentro dele.</p>
+      <span class="tag">// Posicionamento</span>
+    </div>
+    <div class="card">
+      <h3>Você programa, ele obedece ou perde</h3>
+      <p>O controle do ARES é aberto. Ajuste de resposta do gatilho, curva de aceleração, lógica de acionamento do pistão. Um código ruim não trava uma tela, perde uma luta. O retorno é imediato e é público.</p>
+      <span class="tag">// Aprendizado</span>
+    </div>
+    <div class="card">
+      <h3>Liga, não curso</h3>
+      <p>Curso tem fim, campeonato tem próxima rodada. A Liga ARES é mensal, com ranking e um desafio técnico por temporada. A retenção vem da disputa, não da matrícula.</p>
+      <span class="tag">// Modelo</span>
+    </div>
+    <div class="card">
+      <h3>Feito por quem está aprendendo junto</h3>
+      <p>Somos alunos do primeiro ano, não engenheiros com dez anos de estrada. Isso limita o que prometemos e torna nossa documentação mais útil para quem está começando do zero, porque erramos nos mesmos lugares.</p>
+      <span class="tag">// Honestidade</span>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <span class="eyebrow">// O que a pesquisa mostrou</span>
+  <div class="chart" style="max-width:640px;margin-top:1rem;">
+    <p class="chart-t">Áreas tecnológicas de maior interesse — 28 respondentes, múltipla escolha</p>
+    <div class="bar-row"><span class="bar-lab">Inteligência artificial</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-num">22</span></div>
+    <div class="bar-row"><span class="bar-lab">Programação</span><div class="bar-track"><div class="bar-fill" style="width:63.6%"></div></div><span class="bar-num">14</span></div>
+    <div class="bar-row"><span class="bar-lab">Desenv. de jogos</span><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><span class="bar-num">11</span></div>
+    <div class="bar-row"><span class="bar-lab">Automação</span><div class="bar-track"><div class="bar-fill" style="width:45.5%"></div></div><span class="bar-num">10</span></div>
+    <div class="bar-row"><span class="bar-lab">Robótica</span><div class="bar-track"><div class="bar-fill" style="width:40.9%"></div></div><span class="bar-num">9</span></div>
+    <div class="bar-row"><span class="bar-lab">Outra</span><div class="bar-track"><div class="bar-fill" style="width:9.1%"></div></div><span class="bar-num">2</span></div>
+  </div>
+  <p class="note" style="max-width:640px;">Leitura: quem procura robótica hoje está atrás de IA e programação. Um robô de combate programável entrega as duas coisas com um objeto físico no meio. A metodologia completa está no Nível II da área do investidor.</p>
+</section>
+
+<!-- ============ O ROBÔ ============ -->
+<section id="robo" class="sec">
+  <span class="eyebrow">// O robô</span>
+  <h2 class="sec-title">ARES</h2>
+  <p class="lede">Robô de combate da categoria antweight, com atuador linear de impacto. Estrutura em alumínio 6061, eletrônica embarcada e controle em 2.4 GHz. Foi projetado para aguentar pancada, ser desmontado com chave allen e voltar pra arena no mesmo dia.</p>
+
+  <div class="shots">
+    <div class="shot">
+      <img src="images/ares-frontal.jpeg" alt="ARES montado, visto de frente" />
+      <p class="cap">ARES v1 — vista frontal do protótipo</p>
+    </div>
+    <div class="shot-col">
+      <div class="shot">
+        <img src="images/ares-chassi.jpeg" alt="Chassi do ARES com motores e rodas" />
+        <p class="cap">Chassi — motores e conjunto de rodas</p>
+      </div>
+      <div class="shot">
+        <img src="images/ares-componentes-eletronicos.jpeg" alt="Componentes eletrônicos montados no chassi do ARES" />
+        <p class="cap">Eletrônica embarcada — placa e alimentação</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <span class="eyebrow">// Armamento — atuador linear de impacto</span>
+  <div style="max-width:640px;margin-top:.9rem;margin-bottom:2.2rem;">
+    <p class="body-t" style="margin-bottom:.9rem;"><span style="color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.68rem;">CONCEITO —</span> Sistema retrátil que concentra energia cinética num ponto único de contato, em vez de distribuir o impacto pela superfície do adversário.</p>
+    <p class="body-t" style="margin-bottom:.9rem;"><span style="color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.68rem;">ARQUITETURA —</span> O mecanismo de disparo fica encapsulado dentro do chassi. Isso protege os componentes críticos e mantém o centro de gravidade baixo, o que importa muito numa categoria onde 10 gramas mal distribuídas viram um robô que capota sozinho.</p>
+    <p class="body-t" style="margin-bottom:.9rem;"><span style="color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.68rem;">PROPULSÃO —</span> Motor de alto torque acoplado a um conjunto de engrenagens e came, convertendo rotação em impacto linear.</p>
+    <p class="body-t"><span style="color:var(--red);font-family:'Share Tech Mono',monospace;font-size:.68rem;">OPERAÇÃO —</span> O sistema fica armado durante a locomoção. O disparo é por gatilho eletrônico, e o tempo de resposta entre o comando e o impacto é um dos parâmetros que o piloto pode ajustar no código.</p>
+  </div>
+
+  <span class="eyebrow">// Especificações técnicas</span>
+  <div class="specs" style="margin-top:1rem;">
+    <div><span class="spec-label">Categoria</span><span class="spec-value">Antweight</span></div>
+    <div><span class="spec-label">Peso</span><span class="spec-value">~150 g</span></div>
+    <div><span class="spec-label">Arma</span><span class="spec-value">Pistão linear</span></div>
+    <div><span class="spec-label">Acionamento</span><span class="spec-value">Elétrico</span></div>
+    <div><span class="spec-label">Estrutura</span><span class="spec-value">Alumínio 6061</span></div>
+    <div><span class="spec-label">Controle</span><span class="spec-value">2.4 GHz RF</span></div>
+  </div>
+</section>
+
+<!-- ============ DESENVOLVIMENTO ============ -->
+<section id="desenvolvimento" class="sec">
+  <span class="eyebrow">// O desenvolvimento</span>
+  <h2 class="sec-title">Como o ARES foi feito, e o que cada matéria entrou</h2>
+  <p class="lede">O robô não saiu de uma disciplina só. Ele é o ponto onde duas matérias do semestre se encontraram, e cada uma resolveu um problema que a outra não resolvia.</p>
+
+  <div class="grid-2" style="margin-bottom:2.4rem;">
+    <div class="card">
+      <h3>Laboratório de Negócios Digitais</h3>
+      <p>Foi onde o ARES deixou de ser trabalho de competição e virou empresa. A disciplina nos deu o dimensionamento de mercado (TAM, SAM e SOM), a construção e aplicação do questionário com 28 respondentes, a análise dos concorrentes e a regressão linear que sustenta a projeção de demanda. Sem isso teríamos um robô e nenhuma resposta pra pergunta de quanto ele vale.</p>
+      <span class="tag">// Modelo de negócio, pesquisa e projeção</span>
+    </div>
+    <div class="card">
+      <h3>Front-end Developer</h3>
+      <p>Com o professor Israel aprendemos a construir uma interface que funciona de verdade, não só que parece bonita em captura de tela. Semântica de HTML, comportamento responsivo, hierarquia visual e a disciplina de refazer um layout inteiro quando ele quebra no celular. Este site é o entregável direto da matéria, e a organização em três níveis de acesso na área do investidor saiu de lá.</p>
+      <span class="tag">// Interface, responsividade e camadas de acesso</span>
+    </div>
+  </div>
+
+  <span class="eyebrow">// Registro de montagem</span>
+  <div style="max-width:660px;margin-top:1rem;">
+    <p class="body-t" style="margin-bottom:1rem;">A primeira versão do chassi tinha a bateria montada na traseira, atrás do eixo. No papel fazia sentido, porque deixava espaço livre na frente pro mecanismo do pistão. Na primeira bateria de testes o ARES capotava sozinho toda vez que o pistão disparava em movimento: o recuo levantava a frente e o peso concentrado atrás terminava o serviço.</p>
+    <p class="body-t" style="margin-bottom:1rem;">A correção custou uma semana. A Jessica refez a distribuição de massa e a bateria desceu pro meio do chassi, entre os motores, o que obrigou o Derek a redesenhar a base inteira pra abrir espaço. O robô ficou 6 gramas mais pesado e parou de capotar.</p>
+    <p class="note">Fica registrado porque é o tipo de erro que a documentação do kit precisa avisar. Quem monta em casa vai querer colocar a bateria onde sobra espaço, e sobra espaço exatamente no lugar errado.</p>
+  </div>
+</section>
+
+<!-- ============ CONTATO ============ -->
+<section id="contato" class="sec">
+  <span class="eyebrow">// Central de contato</span>
+  <h2 class="sec-title">Canais</h2>
+  <p class="lede">Cada público tem uma pergunta diferente e um tempo de resposta diferente. Em vez de um formulário genérico, separamos por quem está do outro lado.</p>
+
+  <div class="grid-4" style="margin-bottom:2.4rem;">
+    <div class="card">
+      <h3>Clientes</h3>
+      <p>Dúvida sobre o kit, sobre a Liga, status de pedido ou troca dentro dos 7 dias.</p>
+      <span class="tag">clientes@ares.com.br · resposta em até 1 dia útil</span>
+    </div>
+    <div class="card">
+      <h3>Distribuidores</h3>
+      <p>Revenda, lojas de eletrônica e hobby, escolas e clubes de robótica. Tabela e volume mínimo sob consulta.</p>
+      <span class="tag">parceiros@ares.com.br · resposta em até 3 dias úteis</span>
+    </div>
+    <div class="card">
+      <h3>Assistência técnica</h3>
+      <p>Peça quebrada, pistão travado, falha de pareamento do controle. Peças de reposição têm catálogo próprio.</p>
+      <span class="tag">suporte@ares.com.br · resposta em até 1 dia útil</span>
+    </div>
+    <div class="card">
+      <h3>Imprensa especializada</h3>
+      <p>Veículos de robótica, maker e educação. Kit de imprensa com fotos em alta, ficha técnica e histórico da equipe.</p>
+      <span class="tag">imprensa@ares.com.br · resposta em até 2 dias úteis</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="eyebrow">// Chat</span>
+      <div class="chat" style="margin-top:.8rem;">
+        <div class="chat-head">
+          <span>ARES · ATENDIMENTO</span>
+          <span class="chat-status">● ONLINE</span>
+        </div>
+        <div class="chat-log" id="chatLog"></div>
+        <div class="chat-opts" id="chatOpts"></div>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">// Deixe uma mensagem</span>
+      <div class="form-col" style="margin-top:.8rem;">
+        <select class="field" id="msgTipo">
+          <option value="">Assunto</option>
+          <option>Sou cliente ou quero comprar</option>
+          <option>Quero revender o ARES</option>
+          <option>Preciso de assistência técnica</option>
+          <option>Sou de veículo de imprensa</option>
+        </select>
+        <input class="field" type="text" placeholder="Nome" />
+        <input class="field" type="email" placeholder="E-mail" />
+        <textarea class="field" rows="4" placeholder="Sua mensagem"></textarea>
+        <button class="btn" id="btnMsg">Enviar mensagem</button>
+        <p class="note">Protótipo acadêmico. Os formulários deste site não enviam dados a servidor nenhum.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PARA PAIS ============ -->
+<section id="pais" class="sec">
+  <span class="eyebrow">// Comunicação com pais e responsáveis</span>
+  <h2 class="sec-title">Se quem vai montar tem menos de 18</h2>
+  <p class="lede">A maior parte do nosso público declarado é maior de idade, mas parte não é. Para esses, a decisão de compra e a matrícula na Liga passam por um responsável. Esta página é para ele.</p>
+
+  <div class="grid-3" style="margin-bottom:2.2rem;">
+    <div class="card">
+      <h3>É perigoso?</h3>
+      <p>Antweight é a categoria mais leve do combate: 150 gramas, o peso de uma laranja. As lutas acontecem dentro de uma arena fechada em acrílico e o robô só é armado com a tampa travada. O kit vem com o guia de segurança e a arena de testes é vendida à parte.</p>
+      <span class="tag">// Segurança</span>
+    </div>
+    <div class="card">
+      <h3>O que ele aprende de fato</h3>
+      <p>Lógica de programação aplicada a um objeto que responde na hora, noções de eletrônica embarcada, distribuição de massa e um pouco de gestão de tempo, porque campeonato tem data. Não é aula expositiva: é conserto sob pressão.</p>
+      <span class="tag">// Aprendizado</span>
+    </div>
+    <div class="card">
+      <h3>O que você recebe</h3>
+      <p>Na Liga, um resumo mensal com o que foi trabalhado na temporada, a evolução do robô e a frequência. Sem ranking exposto publicamente para menores de 16 e sem foto do participante sem autorização assinada.</p>
+      <span class="tag">// Acompanhamento</span>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="eyebrow">// Dados de menores</span>
+      <p class="body-t" style="margin-top:.8rem;">Para participantes menores de 18 anos coletamos apenas nome, idade e o contato do responsável. Não coletamos endereço, escola, foto ou dado de rede social do menor. O cadastro é feito pelo responsável, e o desligamento apaga os dados em até 30 dias mediante pedido por e-mail. Nada é compartilhado com terceiros.</p>
+      <p class="note" style="margin-top:.9rem;">Base: LGPD, Lei 13.709/2018, artigo 14, que trata do tratamento de dados de crianças e adolescentes.</p>
+    </div>
+    <div>
+      <span class="eyebrow">// Falar com a equipe</span>
+      <div class="form-col" style="margin-top:.8rem;">
+        <input class="field" type="text" placeholder="Seu nome (responsável)" />
+        <input class="field" type="email" placeholder="E-mail" />
+        <input class="field" type="text" placeholder="Idade do participante" />
+        <textarea class="field" rows="3" placeholder="Sua dúvida"></textarea>
+        <button class="btn" id="btnPais">Enviar dúvida</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPRAR ============ -->
+<section id="comprar" class="sec">
+  <span class="eyebrow">// Comprar</span>
+  <h2 class="sec-title">Duas formas de entrar</h2>
+  <p class="lede">O kit é compra única e é seu. A Liga é o que faz o robô continuar evoluindo depois de montado. Dá pra fazer só o primeiro.</p>
+
+  <div class="grid-2" style="margin-bottom:2.4rem;">
+    <div class="card">
+      <span class="eyebrow">// Produto 01</span>
+      <h3 style="font-size:1.4rem;margin-top:.4rem;">Kit ARES — Combat Robot</h3>
+      <p class="note" style="margin:.3rem 0 .8rem;">SKU ARES-ANT-001 · Categoria antweight</p>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.2rem;color:#fff;line-height:1;">R$ 1.890,00</div>
+      <p class="note" style="margin-top:.3rem;">à vista no PIX com 5% de desconto: R$ 1.795,50<br>ou 12× de R$ 175,10 sem juros no cartão</p>
+      <p class="body-t" style="margin-top:1rem;">Estrutura em alumínio 6061 · Pistão linear · Eletrônica embarcada · Controle 2.4 GHz · Manual técnico digital · Guia de segurança</p>
+      <p class="note" style="margin-top:.9rem;color:var(--ok);">● Lote de pré-venda · primeira remessa prevista para 60 dias</p>
+    </div>
+    <div class="card">
+      <span class="eyebrow">// Produto 02</span>
+      <h3 style="font-size:1.4rem;margin-top:.4rem;">Liga ARES</h3>
+      <p class="note" style="margin:.3rem 0 .8rem;">SKU ARES-LIG-001 · Assinatura mensal</p>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.2rem;color:#fff;line-height:1;">R$ 150,00<span style="font-size:1rem;color:var(--muted);">/mês</span></div>
+      <p class="note" style="margin-top:.3rem;">sem fidelidade · cancelamento a qualquer momento</p>
+      <p class="body-t" style="margin-top:1rem;">Acesso à arena · Encontro quinzenal de programação e IA aplicada ao robô · Campeonato mensal com ranking · Desafio técnico por temporada · Suporte de montagem</p>
+      <p class="note" style="margin-top:.9rem;">Preço definido a partir da faixa declarada por 11 dos 28 respondentes da pesquisa (R$ 100 a R$ 200 mensais).</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <span class="eyebrow">// Reservar</span>
+      <p class="body-t" style="margin-top:.7rem;margin-bottom:1rem;">A reserva não gera cobrança. Ela entra na fila do primeiro lote e serve para dimensionarmos a produção. Você recebe o link de pagamento quando o lote abrir.</p>
+      <div class="form-col">
+        <input class="field" type="text" placeholder="Nome completo" />
+        <input class="field" type="email" placeholder="E-mail" />
+        <input class="field" type="tel" placeholder="Telefone ou WhatsApp" />
+        <select class="field">
+          <option value="">O que você quer reservar</option>
+          <option>Kit ARES</option>
+          <option>Liga ARES</option>
+          <option>Kit + Liga</option>
+        </select>
+        <label class="consent">
+          <input type="checkbox" />
+          <span>Li e concordo com os termos de pré-venda e a política de privacidade.</span>
+        </label>
+        <button class="btn" id="btnReserva">Reservar sem custo</button>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">// Garantia e entrega</span>
+      <table style="margin-top:.8rem;">
+        <tr><td style="width:44%;color:var(--muted);">Garantia</td><td>12 meses contra defeito de fabricação</td></tr>
+        <tr><td style="color:var(--muted);">Troca</td><td>7 dias corridos, conforme CDC art. 49</td></tr>
+        <tr><td style="color:var(--muted);">Envio</td><td>Correios PAC e Sedex, transportadora ou retirada</td></tr>
+        <tr><td style="color:var(--muted);">Nota fiscal</td><td>NF-e emitida no faturamento do lote</td></tr>
+        <tr><td style="color:var(--muted);">Reposição</td><td>Catálogo de peças avulsas para itens de desgaste</td></tr>
+      </table>
+      <p class="note" style="margin-top:1rem;">Protótipo acadêmico. Este site não processa pagamento e não coleta dado financeiro. Nenhum campo de cartão, CPF ou endereço é solicitado na reserva.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEJA MEU SÓCIO ============ -->
+<section id="socio" class="sec">
+  <span class="eyebrow">// Seja meu sócio</span>
+  <h2 class="sec-title">Área do investidor</h2>
+  <p class="lede">A informação está organizada em três níveis. O primeiro é público. O segundo abre com senha e aceite de sigilo, para sondagem. O terceiro só é liberado na assinatura de contrato. É a mesma lógica do robô: o sistema fica armado, mas só dispara quando a condição é satisfeita.</p>
+
+  <!-- NÍVEL I -->
+  <div class="tier">
+    <div class="tier-head">
+      <div class="tier-id">Nível I <small>Dados gerais — abertos a qualquer visitante</small></div>
+      <span class="tier-state st-open">DESTRAVADO</span>
+    </div>
+    <div class="tier-body">
+      <div class="kpi">
+        <div><div class="kpi-v">R$ 250 mi</div><div class="kpi-l">TAM · edtech de hardware no Brasil</div></div>
+        <div><div class="kpi-v">R$ 50 mi</div><div class="kpi-l">SAM · grandes centros urbanos</div></div>
+        <div><div class="kpi-v">5%</div><div class="kpi-l">SOM · meta em 24 meses</div></div>
+        <div><div class="kpi-v">30,16%</div><div class="kpi-l">CAGR do setor no Brasil</div></div>
+      </div>
+
+      <p class="body-t" style="max-width:660px;margin-bottom:1.4rem;">O mercado brasileiro de robótica educacional foi estimado em US$ 45 milhões para 2026, com projeção de US$ 648,5 milhões até 2035. O ARES não disputa o segmento de kit escolar institucional, que é onde a LEGO Education domina. Disputa o segmento de hobby técnico com componente competitivo, que hoje não tem produto nacional consolidado.</p>
+
+      <span class="eyebrow">// Linhas de receita</span>
+      <table style="max-width:660px;margin-top:.7rem;">
+        <thead><tr><th>Linha</th><th>Natureza</th><th>Ticket</th><th>Margem alvo</th></tr></thead>
+        <tbody>
+          <tr><td>Kit ARES</td><td>Compra única</td><td>R$ 1.890</td><td>Divulgada no Nível III</td></tr>
+          <tr><td>Liga ARES</td><td>Recorrente mensal</td><td>R$ 150/mês</td><td>Divulgada no Nível III</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:1rem;max-width:660px;">Fontes: Spherical Insights, Brazil Educational Robot Market Size, 2024. Grand View Research, Educational Robot Market Outlook, 2025. Pesquisa primária própria, maio de 2026.</p>
+    </div>
+  </div>
+
+  <!-- NÍVEL II -->
+  <div class="tier">
+    <div class="tier-head">
+      <div class="tier-id">Nível II <small>Sondagem — senha e termo de sigilo</small></div>
+      <span class="tier-state st-lock" id="stateT2">TRAVADO</span>
+    </div>
+    <div class="tier-body" id="gateT2">
+      <div class="gate">
+        <div>
+          <p class="body-t" style="margin-bottom:1.2rem;">O Nível II contém a pesquisa primária completa, a identificação da variável independente, o método de projeção e a análise de concorrentes. Para abrir, informe a senha de sondagem e aceite o termo de sigilo.</p>
+          <p class="note">Conteúdo desta camada: base de 28 respondentes com os três cruzamentos · variável independente e justificativa técnica · critério e limites do modelo de projeção · três cenários de receita para 24 meses · análise qualitativa dos concorrentes.</p>
+        </div>
+        <div class="form-col">
+          <input class="field" type="password" id="pwT2" placeholder="Senha de sondagem" autocomplete="off" />
+          <label class="consent">
+            <input type="checkbox" id="ndaT2" />
+            <span>Declaro que as informações do Nível II são confidenciais, que não as reproduzirei ou compartilharei com terceiros, e que as utilizarei exclusivamente para avaliação de investimento.</span>
+          </label>
+          <button class="btn steel" id="btnT2">Destravar Nível II</button>
+          <p class="gate-msg" id="msgT2"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-body locked" id="bodyT2">
+      <span class="eyebrow">// Perfil da amostra</span>
+      <p class="body-t" style="max-width:660px;margin:.7rem 0 1.6rem;">Pesquisa aplicada em maio de 2026, com 28 respondentes, majoritariamente maiores de 18 anos. O predomínio de adultos foi o achado que mais alterou o produto: o público não é a criança em aula de robótica, é o hobbista técnico e o profissional em requalificação.</p>
+
+      <div class="chart" style="max-width:640px;">
+        <p class="chart-t">Disposição de investimento mensal em cursos de robótica</p>
+        <div class="bar-row"><span class="bar-lab">Entre R$100 e R$200</span><div class="bar-track"><div class="bar-fill steel" style="width:100%"></div></div><span class="bar-num">11</span></div>
+        <div class="bar-row"><span class="bar-lab">Entre R$50 e R$100</span><div class="bar-track"><div class="bar-fill steel" style="width:63.6%"></div></div><span class="bar-num">7</span></div>
+        <div class="bar-row"><span class="bar-lab">Até R$50</span><div class="bar-track"><div class="bar-fill steel" style="width:54.5%"></div></div><span class="bar-num">6</span></div>
+        <div class="bar-row"><span class="bar-lab">Mais de R$200</span><div class="bar-track"><div class="bar-fill steel" style="width:36.4%"></div></div><span class="bar-num">4</span></div>
+      </div>
+
+      <div class="chart" style="max-width:640px;">
+        <p class="chart-t">Fatores que mais influenciam a decisão de inscrição</p>
+        <div class="bar-row"><span class="bar-lab">Qualidade das aulas</span><div class="bar-track"><div class="bar-fill steel" style="width:100%"></div></div><span class="bar-num">22</span></div>
+        <div class="bar-row"><span class="bar-lab">Infraestrutura</span><div class="bar-track"><div class="bar-fill steel" style="width:81.8%"></div></div><span class="bar-num">18</span></div>
+        <div class="bar-row"><span class="bar-lab">Carreira futura</span><div class="bar-track"><div class="bar-fill steel" style="width:59.1%"></div></div><span class="bar-num">13</span></div>
+        <div class="bar-row"><span class="bar-lab">Certificação</span><div class="bar-track"><div class="bar-fill steel" style="width:54.5%"></div></div><span class="bar-num">12</span></div>
+        <div class="bar-row"><span class="bar-lab">Preço</span><div class="bar-track"><div class="bar-fill steel" style="width:45.5%"></div></div><span class="bar-num">10</span></div>
+      </div>
+      <p class="note" style="max-width:660px;margin-bottom:2rem;">Preço aparece em último. Isso sustenta a decisão de não competir por preço e de investir a margem em arena e conteúdo técnico.</p>
+
+      <div class="rule"></div>
+
+      <span class="eyebrow">// Variável independente e método de projeção</span>
+      <div style="max-width:680px;margin-top:.9rem;margin-bottom:1.6rem;">
+        <p class="body-t" style="margin-bottom:.9rem;"><strong style="font-weight:600;color:var(--steel);">Variável independente (X):</strong> nível de interesse em IA e tecnologia, medido pela questão 4 do questionário.</p>
+        <p class="body-t" style="margin-bottom:.9rem;"><strong style="font-weight:600;color:var(--steel);">Variável dependente (Y):</strong> disposição de investimento mensal declarada, questão 9.</p>
+        <p class="body-t" style="margin-bottom:.9rem;"><strong style="font-weight:600;color:var(--steel);">Modelo:</strong> regressão linear simples, Y = a + bX, aplicada sobre as respostas cruzadas.</p>
+        <p class="body-t" style="margin-bottom:.9rem;"><strong style="font-weight:600;color:var(--steel);">Justificativa:</strong> entre as variáveis coletadas, o interesse em IA teve a maior frequência (22 de 28) e a associação mais consistente com a faixa de investimento declarada. A faixa etária influencia o poder de compra, mas não explica retenção, que é o que importa numa linha de receita recorrente.</p>
+        <p class="body-t"><strong style="font-weight:600;color:var(--steel);">Limite declarado:</strong> n = 28. Amostra exploratória, não conclusiva, com intervalo de confiança amplo. Por esse motivo a projeção é apresentada em três cenários e não em valor único. Uma segunda onda com amostra maior está prevista antes de qualquer captação.</p>
+      </div>
+
+      <span class="eyebrow">// Cenários de receita — 24 meses</span>
+      <table style="max-width:680px;margin-top:.7rem;margin-bottom:.8rem;">
+        <thead><tr><th>Cenário</th><th>Kits (24m)</th><th>Assinantes ao fim</th><th>Receita acumulada</th><th>% do SAM</th></tr></thead>
+        <tbody>
+          <tr><td>Pessimista</td><td>310</td><td>120</td><td>R$ 883 mil</td><td>1,8%</td></tr>
+          <tr><td>Realista</td><td>600</td><td>260</td><td>R$ 1,76 mi</td><td>3,5%</td></tr>
+          <tr><td>Otimista</td><td>850</td><td>400</td><td>R$ 2,58 mi</td><td>5,2%</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="max-width:680px;margin-bottom:2rem;">O cenário otimista é o que atinge o SOM de 5% declarado no Nível I. A abertura mês a mês, os coeficientes da regressão e a composição de custo estão no Nível III.</p>
+
+      <div class="rule"></div>
+
+      <span class="eyebrow">// Análise de concorrentes</span>
+      <table style="margin-top:.7rem;">
+        <thead><tr><th>Concorrente</th><th>Pontos fortes</th><th>Pontos fracos</th><th>Estratégia observada</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>LEGO Education</td>
+            <td>Marca global, material de alta qualidade, currículo estruturado</td>
+            <td>Preço elevado, ecossistema fechado</td>
+            <td>Parcerias com escolas de elite e governos</td>
+          </tr>
+          <tr>
+            <td>Modelix Robotics</td>
+            <td>Fabricação nacional, kits versáteis e modulares</td>
+            <td>Curva de aprendizado íngreme, design menos intuitivo</td>
+            <td>Foco em competições e feiras de ciências</td>
+          </tr>
+          <tr>
+            <td>Maker Robotics</td>
+            <td>Metodologias ativas e projetos práticos</td>
+            <td>Menor escala de distribuição</td>
+            <td>Consultoria pedagógica vendida junto ao hardware</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:1.2rem;max-width:680px;">Nenhum dos três opera com combate como mecânica central nem com modelo de liga recorrente. É a lacuna que o ARES ocupa.</p>
+    </div>
+  </div>
+
+  <!-- NÍVEL III -->
+  <div class="tier">
+    <div class="tier-head">
+      <div class="tier-id">Nível III <small>Fechamento — mediante assinatura de contrato</small></div>
+      <span class="tier-state st-lock">TRAVADO</span>
+    </div>
+    <div class="tier-body">
+      <div class="gate">
+        <div>
+          <p class="body-t" style="margin-bottom:1.2rem;">O Nível III não abre por senha. Ele é liberado na assinatura do contrato de confidencialidade e intenção de investimento, com registro de quem acessou e quando.</p>
+          <span class="eyebrow">// Conteúdo desta camada</span>
+          <table style="margin-top:.7rem;">
+            <tr><td>Coeficientes da regressão, resíduos e teste de aderência</td></tr>
+            <tr><td>Projeção mês a mês dos 24 meses, por linha de receita</td></tr>
+            <tr><td>Custo unitário do kit e composição integral da margem</td></tr>
+            <tr><td>Estrutura de capital pretendida e uso dos recursos</td></tr>
+            <tr><td>Roadmap de produto e cronograma de abertura das arenas</td></tr>
+            <tr><td>Cotações de fornecedores e prazos de componentes críticos</td></tr>
+          </table>
+        </div>
+        <div class="form-col">
+          <span class="eyebrow">// Solicitar abertura</span>
+          <input class="field" type="text" placeholder="Nome" />
+          <input class="field" type="text" placeholder="Fundo, empresa ou pessoa física" />
+          <input class="field" type="email" placeholder="E-mail corporativo" />
+          <select class="field">
+            <option value="">Faixa de interesse</option>
+            <option>Até R$ 100 mil</option>
+            <option>R$ 100 mil a R$ 300 mil</option>
+            <option>Acima de R$ 300 mil</option>
+          </select>
+          <button class="btn steel" id="btnT3">Solicitar contrato</button>
+          <p class="gate-msg" id="msgT3"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note" style="max-width:700px;margin-top:1.6rem;">Nota técnica sobre esta implementação: o controle de acesso deste protótipo é executado no navegador, o que significa que ele demonstra o fluxo de três camadas mas não é um mecanismo de segurança. Em produção, a verificação ficaria no servidor, com sessão autenticada e registro de acesso por usuário. A distinção está declarada aqui de propósito, porque tratar controle no cliente como proteção real seria o erro de segurança mais comum do modelo.</p>
+</section>
+
+<footer>
+  <span class="footer-logo">ARES</span>
+  <span class="footer-copy">© 2026 ARES Combat Robotics · Sprint 03 · Laboratório de Negócios Digitais · FIAP</span>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- foto do robô ---- */
+  var SHOT = "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";
+  var img = document.getElementById('shotMain');
+  if (img) img.src = "ares-frontal.jpeg";
+
+  /* ---- menu mobile ---- */
+  var toggle = document.getElementById('navToggle');
+  var links  = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    toggle.textContent = open ? 'FECHAR' : 'MENU';
+  });
+  links.addEventListener('click', function(e){
+    if (e.target.tagName === 'A' && window.innerWidth <= 900) {
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+      toggle.textContent = 'MENU';
+    }
+  });
+
+  /* ---- link ativo conforme rolagem ---- */
+  var anchors = Array.prototype.slice.call(links.querySelectorAll('a'));
+  var sections = anchors.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (!en.isIntersecting) return;
+        anchors.forEach(function(a){
+          a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id);
+        });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(function(s){ obs.observe(s); });
+  }
+
+  /* ---- chat simulado por perfil ---- */
+  var TREE = {
+    start: {
+      bot: 'Aqui é o atendimento da ARES. Pra te direcionar certo, você é qual dos quatro?',
+      opts: [
+        ['Cliente', 'cliente'],
+        ['Distribuidor', 'distribuidor'],
+        ['Assistência', 'assistencia'],
+        ['Imprensa', 'imprensa']
+      ]
+    },
+    cliente: {
+      bot: 'Certo. O kit sai por R$ 1.890 e está em pré-venda, com primeira remessa prevista pra 60 dias. A Liga é R$ 150 por mês, sem fidelidade. Sobre o que você quer saber mais?',
+      opts: [
+        ['O que vem no kit', 'kit'],
+        ['Como funciona a Liga', 'liga'],
+        ['Prazo de entrega', 'prazo'],
+        ['Recomeçar', 'start']
+      ]
+    },
+    kit: { bot: 'Chassi em alumínio 6061, pistão linear montado, eletrônica embarcada, controle 2.4 GHz, manual técnico e guia de segurança. A arena de testes é vendida à parte. Montagem leva umas 3 horas na primeira vez.', opts: [['Voltar','cliente'],['Recomeçar','start']] },
+    liga: { bot: 'Encontro quinzenal de programação e IA aplicada ao robô, campeonato mensal com ranking, um desafio técnico por temporada e suporte de montagem. Dá pra entrar sem ter comprado o kit, usando robô emprestado nas duas primeiras rodadas.', opts: [['Voltar','cliente'],['Recomeçar','start']] },
+    prazo: { bot: 'A reserva não cobra nada agora. Quando o lote fecha, você recebe o link de pagamento e a partir daí o envio sai em até 5 dias úteis. Correios PAC, Sedex, transportadora ou retirada em mãos.', opts: [['Voltar','cliente'],['Recomeçar','start']] },
+    distribuidor: {
+      bot: 'Trabalhamos com lojas de eletrônica e hobby, escolas e clubes de robótica. Tabela de revenda e volume mínimo são enviados por e-mail após uma conversa rápida. Escreva para parceiros@ares.com.br com o CNPJ e a região de atuação.',
+      opts: [['Prazo de resposta','dist2'],['Recomeçar','start']]
+    },
+    dist2: { bot: 'Até 3 dias úteis. Se a proposta envolver exclusividade regional, o retorno é agendado como reunião, não como e-mail.', opts: [['Recomeçar','start']] },
+    assistencia: {
+      bot: 'Qual o problema? Isso muda o caminho.',
+      opts: [['Pistão travado','ass1'],['Controle não pareia','ass2'],['Peça quebrada','ass3'],['Recomeçar','start']]
+    },
+    ass1: { bot: 'Na maioria das vezes é detrito de arena preso na came. Desligue, remova a tampa superior com a chave allen do kit e limpe o alojamento. Se continuar travando, o came pode estar lascado: peça de reposição está no catálogo.', opts: [['Voltar','assistencia'],['Recomeçar','start']] },
+    ass2: { bot: 'Faça o pareamento com o robô a menos de 1 metro do controle e sem outros transmissores 2.4 GHz ligados por perto. Se o LED piscar em vermelho contínuo, é bateria abaixo do limite de operação, não falha de rádio.', opts: [['Voltar','assistencia'],['Recomeçar','start']] },
+    ass3: { bot: 'Peças de desgaste têm catálogo avulso. Envie foto da peça e o número do pedido para suporte@ares.com.br. Dentro da garantia de 12 meses, defeito de fabricação é troca sem custo.', opts: [['Voltar','assistencia'],['Recomeçar','start']] },
+    imprensa: {
+      bot: 'O kit de imprensa tem fotos em alta resolução, ficha técnica do ARES e o histórico da equipe desde a RoboCup FIAP. Solicite em imprensa@ares.com.br. Retorno em até 2 dias úteis, e entrevista com a equipe técnica pode ser agendada.',
+      opts: [['Recomeçar','start']]
+    }
+  };
+
+  var log  = document.getElementById('chatLog');
+  var opts = document.getElementById('chatOpts');
+
+  function push(text, who){
+    var d = document.createElement('div');
+    d.className = 'msg ' + who;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function go(key, label){
+    var node = TREE[key];
+    if (!node) return;
+    if (label) push(label, 'me');
+    push(node.bot, 'bot');
+    opts.innerHTML = '';
+    node.opts.forEach(function(o){
+      var b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = o[0];
+      b.addEventListener('click', function(){ go(o[1], o[0]); });
+      opts.appendChild(b);
+    });
+  }
+  go('start');
+
+  /* ---- destrava do Nível II ---- */
+  var SENHA = 'Ar@s67!';
+  var btn2   = document.getElementById('btnT2');
+  var pw2    = document.getElementById('pwT2');
+  var nda2   = document.getElementById('ndaT2');
+  var msg2   = document.getElementById('msgT2');
+  var gate2  = document.getElementById('gateT2');
+  var body2  = document.getElementById('bodyT2');
+  var state2 = document.getElementById('stateT2');
+
+  function tentar(){
+    if (!nda2.checked) {
+      msg2.className = 'gate-msg err';
+      msg2.textContent = 'Aceite o termo de sigilo para continuar.';
+      return;
+    }
+    if (pw2.value !== SENHA) {
+      msg2.className = 'gate-msg err';
+      msg2.textContent = 'Senha incorreta.';
+      return;
+    }
+    msg2.className = 'gate-msg ok';
+    msg2.textContent = 'Acesso liberado.';
+    gate2.style.display = 'none';
+    body2.classList.remove('locked');
+    state2.textContent = 'DESTRAVADO';
+    state2.className = 'tier-state st-open';
+    body2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  btn2.addEventListener('click', tentar);
+  pw2.addEventListener('keydown', function(e){ if (e.key === 'Enter') tentar(); });
+
+  /* ---- confirmações de formulário (protótipo, sem envio) ---- */
+  function confirmar(id, texto){
+    var b = document.getElementById(id);
+    if (!b) return;
+    b.addEventListener('click', function(){
+      b.textContent = texto;
+      b.disabled = true;
+    });
+  }
+  confirmar('btnMsg',     'Mensagem registrada');
+  confirmar('btnPais',    'Dúvida registrada');
+  confirmar('btnReserva', 'Reserva registrada');
+
+  var btn3 = document.getElementById('btnT3');
+  var msg3 = document.getElementById('msgT3');
+  btn3.addEventListener('click', function(){
+    msg3.className = 'gate-msg ok';
+    msg3.textContent = 'Solicitação registrada. O contrato é enviado em até 2 dias úteis.';
+    btn3.textContent = 'Solicitação enviada';
+    btn3.disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
